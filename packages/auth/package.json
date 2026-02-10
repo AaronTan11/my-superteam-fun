@@ -1,0 +1,24 @@
+{
+  "name": "@my-superteam-fun/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@my-superteam-fun/db": "workspace:*",
+    "@my-superteam-fun/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@my-superteam-fun/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

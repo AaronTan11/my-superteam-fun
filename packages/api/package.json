@@ -1,0 +1,27 @@
+{
+  "name": "@my-superteam-fun/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@my-superteam-fun/auth": "workspace:*",
+    "@my-superteam-fun/db": "workspace:*",
+    "@my-superteam-fun/env": "workspace:*",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "dotenv": "catalog:",
+    "next": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@my-superteam-fun/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
