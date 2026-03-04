@@ -1,47 +1,41 @@
-"use client";
-import { useQuery } from "@tanstack/react-query";
+import { HeroSection } from "@/components/landing/hero-section";
+import { PartnersSection } from "@/components/landing/partners-section";
+import { MissionSection } from "@/components/landing/mission-section";
+import { MembersSpotlight } from "@/components/landing/members-spotlight";
+import { EventsSection } from "@/components/landing/events-section";
+import { WallOfLove } from "@/components/landing/wall-of-love";
+import { FaqSection } from "@/components/landing/faq-section";
+import { JoinCtaSection } from "@/components/landing/join-cta-section";
 
-import { trpc } from "@/utils/trpc";
-
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
+function SectionDivider() {
+  return (
+    <div
+      className="h-px w-full"
+      style={{
+        background:
+          "linear-gradient(to right, transparent, oklch(0.82 0.18 165 / 12%) 30%, oklch(0.55 0.24 303 / 12%) 70%, transparent)",
+      }}
+      aria-hidden="true"
+    />
+  );
+}
 
 export default function Home() {
-  const healthCheck = useQuery(trpc.healthCheck.queryOptions());
-
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-2">
-      <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-      <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-          <div className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-            />
-            <span className="text-sm text-muted-foreground">
-              {healthCheck.isLoading
-                ? "Checking..."
-                : healthCheck.data
-                  ? "Connected"
-                  : "Disconnected"}
-            </span>
-          </div>
-        </section>
-      </div>
-    </div>
+    <>
+      <HeroSection />
+      <PartnersSection />
+      <SectionDivider />
+      <MissionSection />
+      <SectionDivider />
+      <MembersSpotlight />
+      <SectionDivider />
+      <EventsSection />
+      <SectionDivider />
+      <WallOfLove />
+      <SectionDivider />
+      <FaqSection />
+      <JoinCtaSection />
+    </>
   );
 }
