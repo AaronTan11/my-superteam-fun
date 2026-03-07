@@ -1,3 +1,4 @@
+import { DesktopShell } from "@/components/desktop/desktop-shell";
 import { HeroSection } from "@/components/landing/hero-section";
 import { PartnersSection } from "@/components/landing/partners-section";
 import { MissionSection } from "@/components/landing/mission-section";
@@ -22,7 +23,8 @@ function SectionDivider() {
 
 export default function Home() {
   return (
-    <>
+    <DesktopShell initialApp="home">
+      {/* Mobile fallback: standard section layout */}
       <HeroSection />
       <PartnersSection />
       <SectionDivider />
@@ -36,6 +38,6 @@ export default function Home() {
       <SectionDivider />
       <FaqSection />
       <JoinCtaSection />
-    </>
+    </DesktopShell>
   );
 }

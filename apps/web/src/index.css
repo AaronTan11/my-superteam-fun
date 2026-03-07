@@ -10,11 +10,11 @@
 :root {
   /* Base surfaces */
   --background: oklch(0.08 0.02 260);
-  --foreground: oklch(0.93 0.01 250);
-  --card: oklch(0.15 0.03 260);
-  --card-foreground: oklch(0.93 0.01 250);
-  --popover: oklch(0.16 0.03 260);
-  --popover-foreground: oklch(0.93 0.01 250);
+  --foreground: oklch(0.88 0.01 250);
+  --card: oklch(0.18 0.02 260);
+  --card-foreground: oklch(0.88 0.01 250);
+  --popover: oklch(0.20 0.02 260);
+  --popover-foreground: oklch(0.88 0.01 250);
 
   /* Primary: Solana Green — THE accent */
   --primary: oklch(0.82 0.18 165);
@@ -22,7 +22,7 @@
 
   /* Secondary: muted surface */
   --secondary: oklch(0.16 0.015 260);
-  --secondary-foreground: oklch(0.93 0.01 250);
+  --secondary-foreground: oklch(0.88 0.01 250);
 
   /* Accent: warm amber — sparingly */
   --accent: oklch(0.72 0.12 75);
@@ -30,7 +30,7 @@
 
   /* Muted */
   --muted: oklch(0.16 0.015 260);
-  --muted-foreground: oklch(0.55 0.01 260);
+  --muted-foreground: oklch(0.58 0.01 260);
 
   /* Borders & inputs */
   --border: oklch(1 0 0 / 15%);
@@ -52,11 +52,11 @@
 
   /* Sidebar */
   --sidebar: oklch(0.07 0.02 260);
-  --sidebar-foreground: oklch(0.93 0.01 250);
+  --sidebar-foreground: oklch(0.88 0.01 250);
   --sidebar-primary: oklch(0.82 0.18 165);
   --sidebar-primary-foreground: oklch(0.12 0.04 165);
   --sidebar-accent: oklch(0.14 0.015 260);
-  --sidebar-accent-foreground: oklch(0.93 0.01 250);
+  --sidebar-accent-foreground: oklch(0.88 0.01 250);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.82 0.18 165);
 
@@ -81,25 +81,25 @@
   --coral-light: oklch(0.70 0.15 25);
 
   /* Surfaces — visible */
-  --surface-card: oklch(0.15 0.03 260);
-  --surface-card-hover: oklch(0.18 0.03 260);
+  --surface-card: oklch(0.18 0.02 260);
+  --surface-card-hover: oklch(0.22 0.02 260);
   --border-subtle: oklch(1 0 0 / 10%);
   --border-visible: oklch(1 0 0 / 22%);
 }
 
 .dark {
   --background: oklch(0.08 0.02 260);
-  --foreground: oklch(0.93 0.01 250);
-  --card: oklch(0.15 0.03 260);
-  --card-foreground: oklch(0.93 0.01 250);
-  --popover: oklch(0.16 0.03 260);
-  --popover-foreground: oklch(0.93 0.01 250);
+  --foreground: oklch(0.88 0.01 250);
+  --card: oklch(0.18 0.02 260);
+  --card-foreground: oklch(0.88 0.01 250);
+  --popover: oklch(0.20 0.02 260);
+  --popover-foreground: oklch(0.88 0.01 250);
   --primary: oklch(0.82 0.18 165);
   --primary-foreground: oklch(0.12 0.04 165);
   --secondary: oklch(0.16 0.015 260);
-  --secondary-foreground: oklch(0.93 0.01 250);
+  --secondary-foreground: oklch(0.88 0.01 250);
   --muted: oklch(0.16 0.015 260);
-  --muted-foreground: oklch(0.55 0.01 260);
+  --muted-foreground: oklch(0.58 0.01 260);
   --accent: oklch(0.72 0.12 75);
   --accent-foreground: oklch(0.15 0.03 75);
   --destructive: oklch(0.58 0.22 25);
@@ -112,11 +112,11 @@
   --chart-4: oklch(0.58 0.22 25);
   --chart-5: oklch(0.50 0.18 303);
   --sidebar: oklch(0.07 0.02 260);
-  --sidebar-foreground: oklch(0.93 0.01 250);
+  --sidebar-foreground: oklch(0.88 0.01 250);
   --sidebar-primary: oklch(0.82 0.18 165);
   --sidebar-primary-foreground: oklch(0.12 0.04 165);
   --sidebar-accent: oklch(0.14 0.015 260);
-  --sidebar-accent-foreground: oklch(0.93 0.01 250);
+  --sidebar-accent-foreground: oklch(0.88 0.01 250);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.82 0.18 165);
 }
@@ -213,6 +213,45 @@
 
 .animate-marquee {
   animation: marquee var(--marquee-speed, 30s) linear infinite;
+}
+
+/* ===== Desktop Wallpaper Aurora ===== */
+@keyframes aurora-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 1; }
+  33% { transform: translate(4%, -2%) scale(1.05); opacity: 0.8; }
+  66% { transform: translate(-3%, 2%) scale(0.95); opacity: 0.9; }
+}
+
+@keyframes aurora-drift-reverse {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 1; }
+  33% { transform: translate(-3%, 2%) scale(0.96); opacity: 0.85; }
+  66% { transform: translate(3%, -2%) scale(1.04); opacity: 0.8; }
+}
+
+.animate-aurora-drift {
+  animation: aurora-drift 60s ease-in-out infinite;
+}
+
+.animate-aurora-drift-reverse {
+  animation: aurora-drift-reverse 45s ease-in-out infinite;
+}
+
+/* ===== Star Twinkle ===== */
+@keyframes twinkle {
+  0%, 100% { opacity: var(--star-base-opacity, 0.3); }
+  50% { opacity: calc(var(--star-base-opacity, 0.3) * 0.2); }
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora-drift,
+  .animate-aurora-drift-reverse,
+  .animate-twinkle {
+    animation: none;
+  }
 }
 
 /* ===== Scrollbar ===== */

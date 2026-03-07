@@ -27,7 +27,7 @@ export function HeroCanvas({ className }: { className?: string }) {
   return (
     <div className={className}>
       <Canvas
-        camera={{ position: [0, 3.2, 8], fov: 55, near: 0.1, far: 60 }}
+        camera={{ position: [0, 9, 22], fov: 50, near: 0.1, far: 80 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -41,9 +41,9 @@ export function HeroCanvas({ className }: { className?: string }) {
         </Suspense>
         <EffectComposer>
           <Bloom
-            luminanceThreshold={0.8}
-            luminanceSmoothing={0.4}
-            intensity={0.6}
+            luminanceThreshold={0.7}
+            luminanceSmoothing={0.5}
+            intensity={0.8}
             mipmapBlur
           />
         </EffectComposer>

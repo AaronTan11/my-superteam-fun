@@ -4,8 +4,6 @@ import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 
 import "../index.css";
 import Providers from "@/components/providers";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
 
 const syne = Syne({
   variable: "--font-display",
@@ -44,11 +42,7 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <Providers>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

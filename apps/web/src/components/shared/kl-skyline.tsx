@@ -123,7 +123,7 @@ export function KLSkyline({ className }: { className?: string }) {
       <path
         d="M360 300 V180 H380 V300 Z"
         fill="url(#skyline-gradient)"
-        fillOpacity="0.06"
+        fillOpacity="0.10"
       />
 
       {/* ── Buildings between KL Tower and Petronas ── */}
@@ -193,13 +193,13 @@ export function KLSkyline({ className }: { className?: string }) {
       <path
         d="M520 300 V160 H525 V140 H530 V125 H535 V115 L540 50 L545 115 H550 V125 H555 V140 H560 V160 V300 Z"
         fill="url(#skyline-gradient)"
-        fillOpacity="0.08"
+        fillOpacity="0.12"
       />
       {/* Petronas fill — right tower */}
       <path
         d="M620 300 V160 H625 V140 H630 V125 H635 V115 L640 50 L645 115 H650 V125 H655 V140 H660 V160 V300 Z"
         fill="url(#skyline-gradient)"
-        fillOpacity="0.08"
+        fillOpacity="0.12"
       />
 
       {/* ── Window lights on Petronas (animated dots) ── */}
@@ -273,7 +273,7 @@ export function KLSkyline({ className }: { className?: string }) {
       <path
         d="M810 300 V110 H815 V85 L822.5 40 L830 85 H835 V110 V300 Z"
         fill="url(#skyline-gradient)"
-        fillOpacity="0.07"
+        fillOpacity="0.11"
       />
       {/* Merdeka window lights */}
       {[
@@ -329,7 +329,7 @@ export function KLSkyline({ className }: { className?: string }) {
           key={`fill-${i}`}
           d={d}
           fill="url(#skyline-gradient)"
-          fillOpacity="0.03"
+          fillOpacity="0.05"
         />
       ))}
 
