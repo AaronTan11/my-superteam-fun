@@ -1,8 +1,8 @@
-# Superteam Malaysia
+# stmyOS — Superteam Malaysia
 
 The digital hub for Solana builders in Malaysia. Part of the [global Superteam network](https://superteam.fun).
 
-Built as an **immersive OS experience** — macOS desktop on large screens, iOS mobile on phones — where every section is an "app" you open, drag, resize, and navigate with keyboard shortcuts.
+Built as **stmyOS** — an immersive OS experience where every section is an "app" you open, drag, resize, and navigate. macOS desktop on large screens, iOS mobile on phones. Not a website. An operating system for the Malaysian Solana ecosystem.
 
 ## Tech Stack
 
@@ -15,7 +15,8 @@ Built as an **immersive OS experience** — macOS desktop on large screens, iOS 
 | API | tRPC (httpBatchLink) |
 | ORM | Drizzle ORM |
 | Database | PostgreSQL (Supabase local dev) |
-| Auth | Better Auth (email + password, session cookies) |
+| Auth | Better Auth (email + password, session cookies, RBAC) |
+| CMS | Admin dashboard with role-based access (Admin / Editor) |
 | Monorepo | Turborepo + Bun workspaces |
 | Fonts | Syne (display), DM Sans (body), JetBrains Mono (mono) |
 
@@ -39,11 +40,31 @@ cd packages/db && bunx supabase start && cd ../..
 # Push database schema
 bun run db:push
 
+# Seed database with initial data
+bun run db:seed
+
 # Start dev server
 bun run dev
 ```
 
 Open [http://localhost:3002](http://localhost:3002) in your browser.
+
+### Admin Dashboard
+
+Navigate to [http://localhost:3002/admin](http://localhost:3002/admin) to manage content.
+
+Default admin credentials (after seeding):
+- Email: `admin@superteam.my`
+- Password: `admin123`
+
+The admin dashboard supports:
+- **Members**: Add, edit, delete community member profiles
+- **Events**: Manage upcoming and past events (with Luma integration)
+- **Partners**: Manage ecosystem partner logos and links
+- **Testimonials**: Manage community testimonials
+- **FAQ**: Manage frequently asked questions
+- **Stats**: Update community impact metrics
+- **Settings**: User role management (Admin / Editor / User)
 
 ## Environment Variables
 
@@ -64,19 +85,21 @@ my-superteam-fun/
 │   └── web/                     # Next.js 16 app (port 3002)
 │       └── src/
 │           ├── app/             # App Router pages + API routes
+│           │   └── admin/       # CMS admin dashboard
 │           ├── components/
+│           │   ├── admin/       # Admin dashboard components
 │           │   ├── desktop/     # macOS desktop OS (≥768px)
 │           │   ├── mobile/      # iOS mobile experience (<768px)
 │           │   ├── landing/     # SEO landing page sections
 │           │   ├── shared/      # Reusable components
 │           │   ├── three/       # 3D scene (React Three Fiber)
 │           │   └── ui/          # shadcn/ui primitives
-│           ├── data/            # Static data (members, events, partners)
+│           ├── data/            # Static fallback data
 │           └── lib/             # Utilities, constants, routes
 ├── packages/
-│   ├── api/                     # tRPC routers and procedures
+│   ├── api/                     # tRPC routers (CRUD + RBAC)
 │   ├── auth/                    # Better Auth config + Drizzle adapter
-│   ├── db/                      # Drizzle ORM schemas + client
+│   ├── db/                      # Drizzle ORM schemas + client + seed
 │   ├── env/                     # Type-safe env validation (Zod)
 │   └── config/                  # Shared tsconfig
 ├── CLAUDE.md                    # AI assistant instructions
@@ -85,7 +108,7 @@ my-superteam-fun/
 
 ## Architecture
 
-### Dual OS Metaphor
+### stmyOS — Dual OS Metaphor
 
 - **Desktop (≥768px)**: macOS-style experience with draggable/resizable windows, dock with fish-eye magnification, menu bar, desktop icons, keyboard shortcuts (`Cmd+W`, `Cmd+M`, `` Cmd+` ``)
 - **Mobile (<768px)**: iOS-style experience with lock screen, home screen icon grid, full-screen app views with circle-expand transitions
@@ -98,13 +121,22 @@ Home, Members, Events, Mission, Testimonials, FAQ, About — each accessible as 
 
 Real path-based routes (`/events`, `/members`, etc.) via `window.history.replaceState`. Direct URL access renders the OS with that app pre-opened. Mobile deep links skip the lock screen.
 
+### CMS / Admin Dashboard
+
+Full CRUD admin dashboard at `/admin` with role-based access control:
+- **Admin**: Full access to all content + user role management
+- **Editor**: Can manage content (members, events, partners, FAQ, etc.)
+- **User**: Public access only
+
+All content is stored in Supabase (PostgreSQL) and served via tRPC API. Static data files serve as fallback/placeholder data.
+
 ### Design System
 
 - **Primary color**: Solana green `oklch(0.82 0.18 165)`
 - **Background**: Deep dark `oklch(0.08 0.02 260)`
 - **Cards**: Solid `bg-card` with visible borders (no glassmorphism on content)
 - **OS chrome**: Glass effects (`backdrop-filter: blur + saturate`) on dock, menu bar, window frames
-- **Signature visual**: KL Skyline SVG as desktop wallpaper
+- **Signature visual**: KL Skyline SVG as desktop wallpaper with STMY constellation easter egg
 
 ## Available Scripts
 
@@ -115,6 +147,7 @@ Real path-based routes (`/events`, `/members`, etc.) via `window.history.replace
 | `bun run build` | Build all apps for production |
 | `bun run check-types` | TypeScript type checking |
 | `bun run db:push` | Push Drizzle schema to database |
+| `bun run db:seed` | Seed database with initial data |
 | `bun run db:generate` | Generate migration files |
 | `bun run db:migrate` | Run migrations |
 | `bun run db:studio` | Open Drizzle Studio UI |
@@ -123,6 +156,8 @@ Real path-based routes (`/events`, `/members`, etc.) via `window.history.replace
 
 Deploy the `apps/web` directory to [Vercel](https://vercel.com). The monorepo is auto-detected by Turborepo.
 
-## License
-
-MIT
+Required Vercel environment variables:
+- `DATABASE_URL` — Supabase PostgreSQL connection string
+- `BETTER_AUTH_SECRET` — min 32 character secret
+- `BETTER_AUTH_URL` — production URL
+- `CORS_ORIGIN` — production URL

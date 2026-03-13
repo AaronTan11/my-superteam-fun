@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Superteam Malaysia website — the digital hub for Solana builders in Malaysia. Part of the global Superteam network. Built as a Turborepo monorepo scaffolded with better-t-stack.
+**stmyOS** — Superteam Malaysia website, the digital hub for Solana builders in Malaysia. Part of the global Superteam network. Built as a Turborepo monorepo scaffolded with better-t-stack. The site presents as an immersive OS experience (macOS desktop ≥768px, iOS mobile <768px) with a Supabase-backed CMS admin dashboard.
 
 ## Commands
 
@@ -15,15 +15,12 @@ bun run dev:web            # Start only the web app
 bun run build              # Build all apps for production
 bun run check-types        # TypeScript type checking across all packages
 
-# Database (PostgreSQL via Supabase local)
+# Database (PostgreSQL via Supabase — remote or local)
 bun run db:push            # Push Drizzle schema changes to database
+bun run db:seed            # Seed database from static data (packages/db/src/seed.ts)
 bun run db:generate        # Generate migration files
 bun run db:migrate         # Run migrations
 bun run db:studio          # Open Drizzle Studio UI
-
-# Supabase local dev (run from packages/db/)
-bunx supabase start        # Start local Supabase (PostgreSQL on port 54322)
-bunx supabase stop         # Stop local Supabase
 ```
 
 No linter or test runner is configured yet.
@@ -33,15 +30,33 @@ No linter or test runner is configured yet.
 **Monorepo layout** (Turborepo + Bun workspaces):
 
 - `apps/web` — Next.js 16 full-stack app (App Router, React 19, React Compiler enabled, `typedRoutes: true`)
-- `packages/api` — tRPC routers and procedures. Defines `publicProcedure` and `protectedProcedure` (session-based auth guard). The `appRouter` and `AppRouter` type are exported from `src/routers/index.ts`.
-- `packages/auth` — Better-Auth config with Drizzle adapter, email+password auth, `nextCookies()` plugin. Exports `auth` instance.
-- `packages/db` — Drizzle ORM schemas (`src/schema/`), database client (`src/index.ts`), and Drizzle Kit config. PostgreSQL via Supabase local dev (port 54322).
+- `packages/api` — tRPC routers and procedures. Defines `publicProcedure`, `protectedProcedure`, `adminProcedure`, `editorProcedure`. The `appRouter` and `AppRouter` type are exported from `src/routers/index.ts`.
+- `packages/auth` — Better-Auth config with Drizzle adapter, email+password auth, `nextCookies()` plugin, `user.additionalFields.role` for RBAC. Exports `auth` instance.
+- `packages/db` — Drizzle ORM schemas (`src/schema/`), database client (`src/index.ts`), seed script (`src/seed.ts`), and Drizzle Kit config. PostgreSQL via Supabase (remote pooler or local port 54322).
 - `packages/env` — Type-safe env validation using `@t3-oss/env-core` with Zod. Server vars in `src/server.ts`, client vars in `src/web.ts`.
 - `packages/config` — Shared `tsconfig.base.json`.
 
 **Data flow**: Browser → tRPC client (httpBatchLink to `/api/trpc`) → Next.js API route → tRPC router → Drizzle ORM → PostgreSQL
 
-**Auth flow**: `authClient.signIn.email()` → Better-Auth sets httpOnly cookie → tRPC context extracts session via `auth.api.getSession({ headers })` → `protectedProcedure` enforces auth
+**Auth flow**: `authClient.signIn.email()` → Better-Auth sets httpOnly cookie → tRPC context extracts session via `auth.api.getSession({ headers })` → `protectedProcedure` enforces auth → `adminProcedure`/`editorProcedure` enforce RBAC via `session.user.role`
+
+## CMS / Admin Dashboard
+
+Full CRUD admin dashboard at `/admin` with RBAC (Admin / Editor / User roles).
+
+**Auth guard**: `app/admin/layout.tsx` — server component checks session + role, redirects non-admin/editor to `/`.
+
+**Admin routes**: `/admin` (dashboard), `/admin/members`, `/admin/events`, `/admin/partners`, `/admin/testimonials`, `/admin/faq`, `/admin/stats`, `/admin/settings` (user role management, admin-only).
+
+**Components** (`components/admin/`): `admin-shell.tsx`, `admin-sidebar.tsx`, `data-table.tsx` (generic @tanstack/react-table), `delete-dialog.tsx`, `member-form.tsx`, `event-form.tsx`, `partner-form.tsx`, `testimonial-form.tsx`, `faq-form.tsx`
+
+**tRPC routers** (`packages/api/src/routers/`): `members.ts`, `events.ts`, `partners.ts`, `testimonials.ts`, `faq.ts`, `stats.ts`, `admin.ts` — all with Zod validation. Public reads use `publicProcedure`, writes use `editorProcedure` or `adminProcedure`.
+
+**Database tables** (`packages/db/src/schema/`): `auth.ts` (user with role column, session, account, verification), `members.ts`, `events.ts`, `partners.ts`, `testimonials.ts`, `faq.ts`, `stats.ts`. All content tables have `sortOrder`, `createdAt`, `updatedAt`.
+
+**Admin user setup**: Sign up via `/login`, then set `role = 'admin'` in DB: `UPDATE "user" SET role = 'admin' WHERE email = '...'`
+
+**tRPC cache invalidation**: Use `trpc.<router>.<procedure>.queryOptions().queryKey` for invalidation (not `.queryKey()` standalone — that doesn't exist in tRPC v11).
 
 ## Desktop OS Architecture
 
@@ -129,40 +144,50 @@ Dark theme with confident restraint. The KL Skyline is the signature visual; eve
 
 **Landing page sections** (`components/landing/`): `HeroSection`, `PartnersSection`, `MissionSection`, `MembersSpotlight`, `EventsSection`, `WallOfLove`, `FaqSection`, `JoinCtaSection` — kept in `<noscript>` for SEO. Content adapted into desktop/mobile app components.
 
-**Brand assets** (`public/images/brand/`): `logomark-white.png`, `logomark-black.png`, `wordmark-white.png`, `wordmark-black.png`, `wordmark-whiteonblack.png`. Original hi-res @4x files in `public/Logomark/` and `public/Wordmark/`. `STMYLogo` component renders the real logomark PNG.
+**Brand assets** (`public/images/brand/`): `logomark-white.png`, `logomark-black.png`, `wordmark-white.png`, `wordmark-black.png`, `wordmark-whiteonblack.png`. Original hi-res @4x files in `public/Logomark/` and `public/Wordmark/`. `STMYLogo` component uses real logomark PNG.
 
 **Desktop icon colors**: Each app has a gradient defined in `app-config.ts` `gradient` field. Desktop icons and dock icons both use these gradients. Home app renders the STMY logomark instead of a Lucide icon.
 
-**Luma integration**: Luma checkout widget loaded via `next/script` in `layout.tsx`. Events app uses `data-luma-action="checkout"` on RSVP buttons. Event data in `data/events.ts` has `lumaUrl` fields with `lu.ma/` URLs.
+**Luma integration**: Luma checkout widget loaded via `next/script` in `layout.tsx`. Events app uses `data-luma-action="checkout"` on RSVP buttons. Event data has `lumaUrl` fields with `lu.ma/` URLs.
 
 **Reference site**: uae.superteam.fun
 
 ## Key Conventions
 
 - Internal packages are imported as `@my-superteam-fun/<package>` (e.g., `@my-superteam-fun/db`, `@my-superteam-fun/auth`)
-- shadcn/ui components live in `apps/web/src/components/ui/` (style: `base-lyra`, base color: `neutral`, icon library: `lucide`)
+- shadcn/ui components live in `apps/web/src/components/ui/` (style: `base-lyra` using `@base-ui/react` NOT Radix — no `asChild` prop, use `render` prop instead). Icon library: `lucide`.
 - Path aliases in web app: `@/components`, `@/lib`, `@/hooks`, `@/utils`
 - CSS uses Tailwind v4 with CSS variables for theming (`apps/web/src/index.css`)
 - Forms use `@tanstack/react-form`, server state uses `@tanstack/react-query`
 - Toast notifications via `sonner`
 - Animations use `motion/react` (Framer Motion). Prefer `whileInView` with `viewport={{ once: true }}` for scroll reveals.
 - Strict TypeScript everywhere (`noUnusedLocals`, `noUnusedParameters`, `noUncheckedIndexedAccess`)
+- tRPC v11 with `createTRPCOptionsProxy` — use `trpc.xxx.queryOptions()` for queries, `trpc.xxx.mutationOptions()` for mutations
 
 ## Environment Variables
 
 Defined in `apps/web/.env`, validated by `packages/env/src/server.ts`:
 
 ```
-DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
+DATABASE_URL=postgresql://postgres.xxx:password@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
 BETTER_AUTH_SECRET=<min 32 chars>
-BETTER_AUTH_URL=http://localhost:3001
-CORS_ORIGIN=http://localhost:3001
+BETTER_AUTH_URL=http://localhost:3002
+CORS_ORIGIN=http://localhost:3002
 ```
+
+For Vercel deployment, set `BETTER_AUTH_URL` and `CORS_ORIGIN` to the production URL. `turbo.json` has `env` array declaring these for the build task.
 
 ## Database Schema
 
-Auth tables are in `packages/db/src/schema/auth.ts`: `user`, `session`, `account`, `verification`. New domain schemas (members, events, partners, etc.) should be added as separate files in `packages/db/src/schema/` and re-exported from the `index.ts` barrel.
+Auth tables in `packages/db/src/schema/auth.ts`: `user` (with `role` column: "admin" | "editor" | "user"), `session`, `account`, `verification`. Content tables in separate files: `members.ts`, `events.ts`, `partners.ts`, `testimonials.ts`, `faq.ts`, `stats.ts`. All re-exported from `schema/index.ts`. Seed script at `packages/db/src/seed.ts`.
 
 ## Adding New tRPC Procedures
 
-Add routers in `packages/api/src/routers/` and merge them into `appRouter`. Use `publicProcedure` for unauthenticated endpoints, `protectedProcedure` for authenticated ones (session available via `ctx.session`).
+Add routers in `packages/api/src/routers/` and merge them into `appRouter` in `routers/index.ts`. Use `publicProcedure` for unauthenticated, `protectedProcedure` for authenticated, `editorProcedure` for content management, `adminProcedure` for admin-only operations.
+
+## Remaining Work
+
+- **Public API migration**: Switch app components from static `data/*.ts` imports to `trpc.xxx.list.useQuery()` calls (use static data as `placeholderData`)
+- **Partner hover effects**: Need colorize/scale/glow on partner logos in home-app
+- **Member card hover animations**: Need hover effects on member cards in members-app
+- **Newsletter signup**: Optional, not yet implemented
