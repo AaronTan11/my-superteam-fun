@@ -119,7 +119,7 @@ Dark theme with confident restraint. The KL Skyline is the signature visual; eve
 **Color palette** (defined as CSS vars in `apps/web/src/index.css`):
 - Background: deep dark `oklch(0.08 0.02 260)`
 - Primary: Solana green `oklch(0.82 0.18 165)` — THE accent color for buttons, links, active states
-- Extended: `--sol-purple` (used in 3D scene + wallpaper aurora), `--sol-green`, `--warm`, `--coral`
+- Extended: `--sol-purple` (used in wallpaper aurora), `--sol-green`, `--warm`, `--coral`
 - Cards: `oklch(0.18 0.02 260)` — visibly lighter than background
 - Borders: `oklch(1 0 0 / 15%)` — visible, not invisible
 
@@ -139,8 +139,6 @@ Dark theme with confident restraint. The KL Skyline is the signature visual; eve
 **CSS utilities** (in `index.css`): `.animate-marquee`, `.scrollbar-hide`, `.scrollbar-thin`, `.animate-aurora-drift`, `.animate-aurora-drift-reverse`, `.animate-twinkle`
 
 **Shared components** (`components/shared/`): `KLSkyline`, `GlassCard`, `GradientText`, `MemberAvatar`, `AnimatedCounter`, `SectionHeading`, `BentoCard`, `SkillBadge`, `EventCard`, `SocialLinks`, `TextReveal`, `STMYLogo`
-
-**3D scene** (`components/three/`): `HeroCanvas` + `SkylineScene` — React Three Fiber, KL landmarks (Petronas, KL Tower, Merdeka 118), mouse-tracked camera, instanced window lights. Only loads on mid/high-tier devices. Used in landing hero section only (desktop uses SVG skyline in wallpaper).
 
 **Landing page sections** (`components/landing/`): `HeroSection`, `PartnersSection`, `MissionSection`, `MembersSpotlight`, `EventsSection`, `WallOfLove`, `FaqSection`, `JoinCtaSection` — kept in `<noscript>` for SEO. Content adapted into desktop/mobile app components.
 
@@ -188,6 +186,4 @@ Add routers in `packages/api/src/routers/` and merge them into `appRouter` in `r
 ## Remaining Work
 
 - **Public API migration**: Switch app components from static `data/*.ts` imports to `trpc.xxx.list.useQuery()` calls (use static data as `placeholderData`)
-- **Partner hover effects**: Need colorize/scale/glow on partner logos in home-app
-- **Member card hover animations**: Need hover effects on member cards in members-app
 - **Newsletter signup**: Optional, not yet implemented

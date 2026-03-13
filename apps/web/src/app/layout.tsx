@@ -26,8 +26,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Superteam Malaysia",
-    template: "%s | Superteam Malaysia",
+    default: "stmyOS — Superteam Malaysia",
+    template: "%s | stmyOS",
   },
   description:
     "The home for Solana builders in Malaysia. Connect, collaborate, and grow with the Superteam Malaysia community.",

@@ -11,7 +11,6 @@ Built as **stmyOS** — an immersive OS experience where every section is an "ap
 | Framework | Next.js 16 (App Router, React 19, React Compiler) |
 | Styling | Tailwind CSS v4, CSS variables theming |
 | Animation | Framer Motion (`motion/react`) |
-| 3D | React Three Fiber, Three.js, Drei |
 | API | tRPC (httpBatchLink) |
 | ORM | Drizzle ORM |
 | Database | PostgreSQL (Supabase local dev) |
@@ -92,7 +91,6 @@ my-superteam-fun/
 │           │   ├── mobile/      # iOS mobile experience (<768px)
 │           │   ├── landing/     # SEO landing page sections
 │           │   ├── shared/      # Reusable components
-│           │   ├── three/       # 3D scene (React Three Fiber)
 │           │   └── ui/          # shadcn/ui primitives
 │           ├── data/            # Static fallback data
 │           └── lib/             # Utilities, constants, routes
