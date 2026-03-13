@@ -9,7 +9,6 @@ import {
 } from "motion/react";
 import { useRef, type ReactNode } from "react";
 import {
-  Globe,
   Users,
   Calendar,
   Briefcase,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import { useDesktop } from "./desktop-context";
 import { SOCIAL_LINKS } from "@/lib/constants";
+import { APP_CONFIGS } from "./app-config";
 import type { AppType } from "./types";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,8 +28,8 @@ const MAX_ICON_SIZE = 72;
 const MAGNIFICATION_DISTANCE = 150;
 
 /* ── App & link data ── */
-const DOCK_APPS: { appType: AppType; label: string; icon: LucideIcon }[] = [
-  { appType: "home", label: "Home", icon: Globe },
+const DOCK_APPS: { appType: AppType; label: string; icon: LucideIcon | null }[] = [
+  { appType: "home", label: "Home", icon: null },
   { appType: "members", label: "Members", icon: Users },
   { appType: "events", label: "Events", icon: Calendar },
   { appType: "mission", label: "What We Do", icon: Briefcase },
@@ -79,6 +79,7 @@ function DockIcon({
   href,
   isActive,
   isOpen,
+  gradient,
 }: {
   mouseX: MotionValue<number>;
   isHoveringRef: React.RefObject<boolean>;
@@ -88,6 +89,7 @@ function DockIcon({
   href?: string;
   isActive?: boolean;
   isOpen?: boolean;
+  gradient?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const springSize = useDockMagnification(mouseX, ref, isHoveringRef);
@@ -95,10 +97,15 @@ function DockIcon({
   // Scale the inner icon content proportionally
   const iconScale = useTransform(springSize, (s) => s / BASE_ICON_SIZE);
 
-  const buttonClasses = `w-full h-full rounded-xl flex items-center justify-center transition-colors ${
-    isActive
-      ? "bg-primary/20 border border-primary/30"
-      : "bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.10]"
+  const hasGradient = !!gradient;
+  const buttonClasses = `w-full h-full rounded-xl flex items-center justify-center transition-colors overflow-hidden ${
+    hasGradient
+      ? isActive
+        ? "border border-white/30"
+        : "border border-white/[0.12]"
+      : isActive
+        ? "bg-primary/20 border border-primary/30"
+        : "bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.10]"
   }`;
 
   return (
@@ -114,11 +121,17 @@ function DockIcon({
             rel="noopener noreferrer"
             className={buttonClasses}
             aria-label={label}
+            style={gradient ? { background: gradient } : undefined}
           >
             <motion.div style={{ scale: iconScale }}>{children}</motion.div>
           </a>
         ) : (
-          <button onClick={onClick} className={buttonClasses} aria-label={label}>
+          <button
+            onClick={onClick}
+            className={buttonClasses}
+            aria-label={label}
+            style={gradient ? { background: gradient } : undefined}
+          >
             <motion.div style={{ scale: iconScale }}>{children}</motion.div>
           </button>
         )}
@@ -152,11 +165,12 @@ function DockAppItem({
 }: {
   appType: AppType;
   label: string;
-  icon: LucideIcon;
+  icon: LucideIcon | null;
   mouseX: MotionValue<number>;
   isHoveringRef: React.RefObject<boolean>;
 }) {
   const { state, openApp } = useDesktop();
+  const config = APP_CONFIGS[appType];
   const isOpen = state.windows.some((w) => w.appType === appType);
   const isActive =
     state.windows.find((w) => w.id === state.activeWindowId)?.appType ===
@@ -170,8 +184,17 @@ function DockAppItem({
       onClick={() => openApp(appType)}
       isActive={isActive}
       isOpen={isOpen}
+      gradient={config.gradient}
     >
-      <Icon className="size-5" strokeWidth={1.5} />
+      {Icon ? (
+        <Icon className="size-5 text-white drop-shadow-sm" strokeWidth={1.8} />
+      ) : (
+        <img
+          src="/images/brand/logomark-white.png"
+          alt=""
+          className="size-6 object-contain"
+        />
+      )}
     </DockIcon>
   );
 }

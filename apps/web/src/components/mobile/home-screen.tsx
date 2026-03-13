@@ -41,16 +41,22 @@ function AppIcon({
       className="flex flex-col items-center gap-1 active:scale-90 transition-transform duration-150"
     >
       <div
-        className="size-[60px] rounded-[14px] flex items-center justify-center border border-white/10"
+        className="size-[60px] rounded-[14px] flex items-center justify-center border border-white/[0.15]"
         style={{
-          backgroundColor: app.color,
-          backdropFilter: "blur(20px) saturate(1.2)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.2)",
+          background: app.gradient,
           boxShadow:
-            "0 2px 8px oklch(0 0 0 / 20%), inset 0 1px 0 oklch(1 0 0 / 6%)",
+            "0 2px 10px oklch(0 0 0 / 30%), inset 0 1px 0 oklch(1 0 0 / 20%)",
         }}
       >
-        <Icon className="size-7 text-foreground/80" strokeWidth={1.5} />
+        {Icon ? (
+          <Icon className="size-7 text-white drop-shadow-sm" strokeWidth={1.5} />
+        ) : (
+          <img
+            src="/images/brand/logomark-white.png"
+            alt=""
+            className="size-8 object-contain"
+          />
+        )}
       </div>
       <span className="text-[11px] text-foreground/70 leading-tight">
         {app.label}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import SectionWrapper from "@/components/layout/section-wrapper";
-import { SectionHeading } from "@/components/shared/section-heading";
-import { MemberFilters } from "@/components/members/member-filters";
+import { DesktopShell } from "@/components/desktop/desktop-shell";
+import { MembersSpotlight } from "@/components/landing/members-spotlight";
 
 export const metadata: Metadata = {
   title: "Members",
@@ -11,13 +10,8 @@ export const metadata: Metadata = {
 
 export default function MembersPage() {
   return (
-    <SectionWrapper className="pt-32 md:pt-40 relative">
-      <SectionHeading
-        title="Our Members"
-        subtitle="The builders, creators, and leaders powering Solana in Malaysia"
-        gradient="malaysia"
-      />
-      <MemberFilters />
-    </SectionWrapper>
+    <DesktopShell initialApp="members">
+      <MembersSpotlight />
+    </DesktopShell>
   );
 }

@@ -28,7 +28,7 @@ export function PartnersSection() {
               href={partner.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-display text-base md:text-lg font-semibold uppercase tracking-wide text-muted-foreground/60 hover:text-foreground/80 transition-colors duration-300 flex-shrink-0"
+              className="font-display text-base md:text-lg font-semibold uppercase tracking-[0.12em] text-muted-foreground/40 hover:text-primary hover:scale-105 transition-all duration-300 flex-shrink-0"
             >
               {partner.name}
             </a>

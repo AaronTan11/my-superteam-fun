@@ -29,7 +29,7 @@ export function DesktopShell({ children, initialApp }: DesktopShellProps) {
     <>
       {/* Mobile: iOS-style experience, hidden on desktop */}
       <div className="md:hidden">
-        <MobileShell />
+        <MobileShell initialApp={initialApp} />
       </div>
 
       {/* SEO fallback: crawler-visible content */}

@@ -68,6 +68,22 @@ export function AppView({ app, origin }: AppViewProps) {
       <div className="pt-8">
         <MobileAppContent app={app} />
       </div>
+
+      {/* Swipe-up home gesture zone */}
+      <motion.div
+        className="fixed bottom-0 left-0 right-0 z-[9999] flex items-end justify-center"
+        style={{ height: HOME_INDICATOR_HEIGHT + 20 }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.3}
+        onDragEnd={(_, info) => {
+          if (info.offset.y < -60) {
+            closeApp();
+          }
+        }}
+      >
+        <div className="w-[134px] h-[5px] rounded-full bg-white/30 mb-2" />
+      </motion.div>
     </motion.div>
   );
 }

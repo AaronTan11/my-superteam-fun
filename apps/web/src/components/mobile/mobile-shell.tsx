@@ -7,6 +7,7 @@ import { HomeIndicator } from "./home-indicator";
 import { LockScreen } from "./lock-screen";
 import { HomeScreen } from "./home-screen";
 import { AppView } from "./app-view";
+import type { AppType } from "@/components/desktop/types";
 
 function MobileScreenRouter() {
   const { state } = useMobile();
@@ -26,9 +27,13 @@ function MobileScreenRouter() {
   );
 }
 
-export function MobileShell() {
+interface MobileShellProps {
+  initialApp?: AppType;
+}
+
+export function MobileShell({ initialApp }: MobileShellProps) {
   return (
-    <MobileProvider>
+    <MobileProvider initialApp={initialApp}>
       <div className="h-[100dvh] w-screen overflow-hidden bg-background relative">
         <StatusBar />
         <MobileScreenRouter />

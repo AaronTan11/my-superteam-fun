@@ -11,7 +11,7 @@ export function MemberCard({ member }: MemberCardProps) {
   return (
     <GlassCard className="p-5">
       <div className="flex items-start gap-4 mb-4">
-        <MemberAvatar name={member.name} size="md" className="size-14 text-base" />
+        <MemberAvatar name={member.name} photo={member.photo || undefined} size="md" className="size-14 text-base" />
         <div className="min-w-0">
           <h3 className="font-display font-semibold text-sm truncate">
             {member.name}

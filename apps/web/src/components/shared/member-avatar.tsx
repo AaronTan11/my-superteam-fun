@@ -28,6 +28,7 @@ function getInitials(name: string): string {
 
 interface MemberAvatarProps {
   name: string;
+  photo?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -40,11 +41,27 @@ const sizeClasses = {
 
 export function MemberAvatar({
   name,
+  photo,
   size = "md",
   className,
 }: MemberAvatarProps) {
   const initials = getInitials(name);
   const color = PALETTE[hashName(name) % PALETTE.length]!;
+
+  if (photo) {
+    return (
+      <img
+        src={photo}
+        alt={name}
+        className={cn(
+          "rounded-full object-cover select-none shrink-0",
+          sizeClasses[size],
+          className
+        )}
+        style={{ backgroundColor: color }}
+      />
+    );
+  }
 
   return (
     <div

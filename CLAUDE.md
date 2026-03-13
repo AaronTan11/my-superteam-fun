@@ -10,7 +10,7 @@ Superteam Malaysia website — the digital hub for Solana builders in Malaysia. 
 
 ```bash
 bun install                # Install all dependencies
-bun run dev                # Start all apps in dev mode (web at http://localhost:3001)
+bun run dev                # Start all apps in dev mode (web at http://localhost:3002)
 bun run dev:web            # Start only the web app
 bun run build              # Build all apps for production
 bun run check-types        # TypeScript type checking across all packages
@@ -95,7 +95,7 @@ iOS-style experience on viewports <768px. Components in `components/mobile/`.
 
 **Wallpaper**: Layered atmospheric background — diagonal gradient sky, scattered stars with **STMY constellation** easter egg (subtle green dots + connecting lines, opacity 0.35), animated aurora glows (sol-purple 40% + sol-green 35%, 60s/45s drift), KL Skyline SVG at 45% opacity, ground glow. Stars have CSS twinkle animation on ~1/7 of them.
 
-**URL sync**: `window.history.replaceState` updates URL when active window changes (`/` for home, `/#appType` for others). Does NOT use `router.push` to avoid triggering Next.js navigation.
+**URL sync**: `window.history.replaceState` updates URL when active window changes. Uses real path-based routes (`/events`, `/members`, etc.) mapped via `lib/app-routes.ts`. Does NOT use `router.push` to avoid triggering Next.js navigation. Each app has a real Next.js route page (`app/events/page.tsx`, etc.) that renders `<DesktopShell initialApp="...">` for direct URL access and SEO. Mobile deep links: visiting `/events` on mobile skips lock screen and opens Events app directly.
 
 ## Design System
 
@@ -128,6 +128,12 @@ Dark theme with confident restraint. The KL Skyline is the signature visual; eve
 **3D scene** (`components/three/`): `HeroCanvas` + `SkylineScene` — React Three Fiber, KL landmarks (Petronas, KL Tower, Merdeka 118), mouse-tracked camera, instanced window lights. Only loads on mid/high-tier devices. Used in landing hero section only (desktop uses SVG skyline in wallpaper).
 
 **Landing page sections** (`components/landing/`): `HeroSection`, `PartnersSection`, `MissionSection`, `MembersSpotlight`, `EventsSection`, `WallOfLove`, `FaqSection`, `JoinCtaSection` — kept in `<noscript>` for SEO. Content adapted into desktop/mobile app components.
+
+**Brand assets** (`public/images/brand/`): `logomark-white.png`, `logomark-black.png`, `wordmark-white.png`, `wordmark-black.png`, `wordmark-whiteonblack.png`. Original hi-res @4x files in `public/Logomark/` and `public/Wordmark/`. `STMYLogo` component renders the real logomark PNG.
+
+**Desktop icon colors**: Each app has a gradient defined in `app-config.ts` `gradient` field. Desktop icons and dock icons both use these gradients. Home app renders the STMY logomark instead of a Lucide icon.
+
+**Luma integration**: Luma checkout widget loaded via `next/script` in `layout.tsx`. Events app uses `data-luma-action="checkout"` on RSVP buttons. Event data in `data/events.ts` has `lumaUrl` fields with `lu.ma/` URLs.
 
 **Reference site**: uae.superteam.fun
 

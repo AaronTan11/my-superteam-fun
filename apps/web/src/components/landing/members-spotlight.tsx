@@ -74,7 +74,7 @@ export function MembersSpotlight() {
                     aria-hidden="true"
                   />
                   <div className="flex items-center gap-3">
-                    <MemberAvatar name={member.name} size="md" />
+                    <MemberAvatar name={member.name} photo={member.photo || undefined} size="md" />
                     <div className="min-w-0">
                       <h3 className="font-display font-semibold text-sm group-hover:text-primary transition-colors truncate">
                         {member.name}

@@ -1,66 +1,128 @@
-# my-superteam-fun
+# Superteam Malaysia
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Self, TRPC, and more.
+The digital hub for Solana builders in Malaysia. Part of the [global Superteam network](https://superteam.fun).
 
-## Features
+Built as an **immersive OS experience** — macOS desktop on large screens, iOS mobile on phones — where every section is an "app" you open, drag, resize, and navigate with keyboard shortcuts.
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **tRPC** - End-to-end type-safe APIs
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Turborepo** - Optimized monorepo build system
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, React 19, React Compiler) |
+| Styling | Tailwind CSS v4, CSS variables theming |
+| Animation | Framer Motion (`motion/react`) |
+| 3D | React Three Fiber, Three.js, Drei |
+| API | tRPC (httpBatchLink) |
+| ORM | Drizzle ORM |
+| Database | PostgreSQL (Supabase local dev) |
+| Auth | Better Auth (email + password, session cookies) |
+| Monorepo | Turborepo + Bun workspaces |
+| Fonts | Syne (display), DM Sans (body), JetBrains Mono (mono) |
+
+## Prerequisites
+
+- [Bun](https://bun.sh) >= 1.3
+- [Docker](https://www.docker.com/) (for Supabase local dev)
 
 ## Getting Started
 
-First, install the dependencies:
-
 ```bash
+# Install dependencies
 bun install
-```
 
-## Database Setup
+# Copy environment variables
+cp apps/web/.env.example apps/web/.env
 
-This project uses PostgreSQL with Drizzle ORM.
+# Start local Supabase (PostgreSQL on port 54322)
+cd packages/db && bunx supabase start && cd ../..
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/web/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
-
-```bash
+# Push database schema
 bun run db:push
-```
 
-Then, run the development server:
-
-```bash
+# Start dev server
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application.
+Open [http://localhost:3002](http://localhost:3002) in your browser.
+
+## Environment Variables
+
+Create `apps/web/.env`:
+
+```
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
+BETTER_AUTH_SECRET=<min 32 chars>
+BETTER_AUTH_URL=http://localhost:3002
+CORS_ORIGIN=http://localhost:3002
+```
 
 ## Project Structure
 
 ```
 my-superteam-fun/
 ├── apps/
-│   └── web/         # Fullstack application (Next.js)
+│   └── web/                     # Next.js 16 app (port 3002)
+│       └── src/
+│           ├── app/             # App Router pages + API routes
+│           ├── components/
+│           │   ├── desktop/     # macOS desktop OS (≥768px)
+│           │   ├── mobile/      # iOS mobile experience (<768px)
+│           │   ├── landing/     # SEO landing page sections
+│           │   ├── shared/      # Reusable components
+│           │   ├── three/       # 3D scene (React Three Fiber)
+│           │   └── ui/          # shadcn/ui primitives
+│           ├── data/            # Static data (members, events, partners)
+│           └── lib/             # Utilities, constants, routes
 ├── packages/
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── api/                     # tRPC routers and procedures
+│   ├── auth/                    # Better Auth config + Drizzle adapter
+│   ├── db/                      # Drizzle ORM schemas + client
+│   ├── env/                     # Type-safe env validation (Zod)
+│   └── config/                  # Shared tsconfig
+├── CLAUDE.md                    # AI assistant instructions
+└── turbo.json                   # Turborepo pipeline config
 ```
+
+## Architecture
+
+### Dual OS Metaphor
+
+- **Desktop (≥768px)**: macOS-style experience with draggable/resizable windows, dock with fish-eye magnification, menu bar, desktop icons, keyboard shortcuts (`Cmd+W`, `Cmd+M`, `` Cmd+` ``)
+- **Mobile (<768px)**: iOS-style experience with lock screen, home screen icon grid, full-screen app views with circle-expand transitions
+
+### 7 Apps
+
+Home, Members, Events, Mission, Testimonials, FAQ, About — each accessible as a window (desktop) or full-screen view (mobile).
+
+### URL Sync
+
+Real path-based routes (`/events`, `/members`, etc.) via `window.history.replaceState`. Direct URL access renders the OS with that app pre-opened. Mobile deep links skip the lock screen.
+
+### Design System
+
+- **Primary color**: Solana green `oklch(0.82 0.18 165)`
+- **Background**: Deep dark `oklch(0.08 0.02 260)`
+- **Cards**: Solid `bg-card` with visible borders (no glassmorphism on content)
+- **OS chrome**: Glass effects (`backdrop-filter: blur + saturate`) on dock, menu bar, window frames
+- **Signature visual**: KL Skyline SVG as desktop wallpaper
 
 ## Available Scripts
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
-- `bun run db:studio`: Open database studio UI
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Start all apps in dev mode |
+| `bun run dev:web` | Start only the web app |
+| `bun run build` | Build all apps for production |
+| `bun run check-types` | TypeScript type checking |
+| `bun run db:push` | Push Drizzle schema to database |
+| `bun run db:generate` | Generate migration files |
+| `bun run db:migrate` | Run migrations |
+| `bun run db:studio` | Open Drizzle Studio UI |
+
+## Deployment
+
+Deploy the `apps/web` directory to [Vercel](https://vercel.com). The monorepo is auto-detected by Turborepo.
+
+## License
+
+MIT

@@ -9,6 +9,7 @@ import { KLSkyline } from "@/components/shared/kl-skyline";
 import { MENU_BAR_HEIGHT, DOCK_HEIGHT } from "./types";
 import { useKeyboardShortcuts } from "./use-keyboard-shortcuts";
 import type { AppType } from "./types";
+import { appTypePath } from "@/lib/app-routes";
 
 interface DesktopProps {
   initialApp?: AppType;
@@ -31,23 +32,20 @@ export function Desktop({ initialApp = "home" }: DesktopProps) {
       (w) => w.id === state.activeWindowId,
     );
     if (!activeWin) return;
-    const path =
-      activeWin.appType === "home" ? "/" : `/#${activeWin.appType}`;
-    if (window.location.pathname + window.location.hash !== path) {
+    const path = appTypePath(activeWin.appType);
+    if (window.location.pathname !== path) {
       window.history.replaceState(null, "", path);
     }
   }, [state.activeWindowId, state.windows]);
 
   return (
+    <>
+    {/* Wallpaper — extends full screen behind dock */}
     <div
-      className="fixed inset-0 overflow-hidden"
-      style={{
-        top: MENU_BAR_HEIGHT,
-        bottom: DOCK_HEIGHT,
-      }}
+      className="fixed inset-0 overflow-hidden bg-background"
+      style={{ top: MENU_BAR_HEIGHT }}
+      aria-hidden="true"
     >
-      {/* Wallpaper */}
-      <div className="absolute inset-0 bg-background" aria-hidden="true">
         {/* Base gradient — diagonal atmospheric sky */}
         <div
           className="absolute inset-0"
@@ -220,6 +218,14 @@ export function Desktop({ initialApp = "home" }: DesktopProps) {
         />
       </div>
 
+    {/* Interactive area — constrained above dock */}
+    <div
+      className="fixed inset-0 overflow-hidden"
+      style={{
+        top: MENU_BAR_HEIGHT,
+        bottom: DOCK_HEIGHT,
+      }}
+    >
       {/* Desktop Icons */}
       <DesktopIcons />
 
@@ -230,5 +236,6 @@ export function Desktop({ initialApp = "home" }: DesktopProps) {
         </Window>
       ))}
     </div>
+    </>
   );
 }

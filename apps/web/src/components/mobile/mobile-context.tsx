@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { AppType } from "@/components/desktop/types";
+import { appTypePath } from "@/lib/app-routes";
 
 /* ── State ── */
 type MobileScreen = "lock" | "home" | "app";
@@ -75,10 +76,17 @@ export function useMobile() {
 }
 
 /* ── Provider ── */
-export function MobileProvider({ children }: { children: ReactNode }) {
+interface MobileProviderProps {
+  children: ReactNode;
+  initialApp?: AppType;
+}
+
+export function MobileProvider({ children, initialApp }: MobileProviderProps) {
+  const hasDeepLink = initialApp && initialApp !== "home";
   const [state, dispatch] = useReducer(mobileReducer, {
     ...initialState,
-    screen: getInitialScreen(),
+    screen: hasDeepLink ? "app" : getInitialScreen(),
+    activeApp: hasDeepLink ? initialApp : null,
   });
 
   const unlock = useCallback(() => {
@@ -97,12 +105,19 @@ export function MobileProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "CLOSE_APP" });
   }, []);
 
-  // Browser history integration — back button closes app
+  // Browser history + URL sync — update URL when app changes
   useEffect(() => {
-    if (state.screen === "app") {
-      window.history.pushState({ mobileApp: true }, "");
+    if (state.screen === "app" && state.activeApp) {
+      const path = appTypePath(state.activeApp);
+      if (window.location.pathname !== path) {
+        window.history.pushState({ mobileApp: true }, "", path);
+      }
+    } else if (state.screen === "home") {
+      if (window.location.pathname !== "/") {
+        window.history.replaceState(null, "", "/");
+      }
     }
-  }, [state.screen]);
+  }, [state.screen, state.activeApp]);
 
   useEffect(() => {
     const handlePopState = () => {
