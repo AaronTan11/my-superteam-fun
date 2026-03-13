@@ -1,0 +1,24 @@
+{
+  "name": "demo-video",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "preview": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts StmyOSDemo out/demo.mp4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.435",
+    "@remotion/cli": "^4.0.435",
+    "@remotion/transitions": "^4.0.435",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.435"
+  }
+}

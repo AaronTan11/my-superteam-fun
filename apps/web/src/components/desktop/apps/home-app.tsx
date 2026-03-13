@@ -84,7 +84,7 @@ function HomePartners() {
               href={partner.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground/40 hover:text-primary hover:scale-105 transition-all duration-300 flex-shrink-0"
+              className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground/40 hover:text-primary hover:scale-110 hover:drop-shadow-[0_0_8px_oklch(0.82_0.18_165/0.5)] transition-all duration-300 flex-shrink-0"
             >
               {partner.name}
             </a>

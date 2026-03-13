@@ -112,7 +112,7 @@ export function MembersApp() {
             <div
               key={member.id}
               className={cn(
-                "p-4 rounded-lg border border-border border-l-2 hover:border-border-visible hover:-translate-y-px transition-all duration-200",
+                "group/card p-4 rounded-lg border border-border border-l-2 hover:border-primary/30 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_-4px_oklch(0.82_0.18_165/0.12)] transition-all duration-200",
                 borderColor(member.skills)
               )}
             >
@@ -125,7 +125,7 @@ export function MembersApp() {
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-display text-sm font-semibold truncate">
+                    <p className="font-display text-sm font-semibold truncate group-hover/card:text-primary transition-colors duration-200">
                       {member.name}
                     </p>
                     {member.twitterHandle && (
